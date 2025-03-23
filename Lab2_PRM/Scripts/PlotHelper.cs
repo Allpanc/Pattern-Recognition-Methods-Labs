@@ -7,8 +7,9 @@ public static class PlotHelper
     public static void AddCoordinatesToPlot(Plot plt, double[] xValues, double[] yValues, Color color)
     {
         var scatter = plt.Add.Scatter(xValues, yValues);
-        scatter.MarkerSize = 5;
+        scatter.MarkerSize = 10;
         scatter.Color = color;
+        scatter.LineWidth = 0;
     }
 
     public static void SaveResultPlot(Plot plt, string filename, string title)

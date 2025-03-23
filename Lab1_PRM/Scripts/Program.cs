@@ -28,9 +28,9 @@ internal class Program
         
         Color[] plotColors =
         {
-            Color.FromColor(System.Drawing.Color.Red), 
-            Color.FromColor(System.Drawing.Color.Green), 
-            Color.FromColor(System.Drawing.Color.Blue)
+            Color.FromColor(System.Drawing.Color.Goldenrod), 
+            Color.FromColor(System.Drawing.Color.DarkViolet), 
+            Color.FromColor(System.Drawing.Color.DarkOliveGreen)
         };
 
         var commonPlot = new Plot();
@@ -137,8 +137,9 @@ internal class Program
     private static void AddCoordinatesToPlot(Plot plt, double[] xValues, double[] yValues, Color color)
     {
         var scatter = plt.Add.Scatter(xValues, yValues);
-        scatter.MarkerSize = 5;
+        scatter.MarkerSize = 10;
         scatter.Color = color;
+        scatter.LineWidth = 0;
     }
 
     private static void SaveResultPlot(Plot plt, string filename, string title)

@@ -107,7 +107,7 @@ internal class Program
 
             var scatter = plt.Add.Scatter(xiTest, yiTest, plotColors[index]);
             scatter.LineWidth = 0;
-            scatter.MarkerSize = 4;
+            scatter.MarkerSize = 10;
         }
 
         var (classMeans, classCovariances, classPriors) = TrainParametersCalculator.Train(xTrain, yTrain, labels, 3);
@@ -189,49 +189,6 @@ internal class Program
 
         // Устанавливаем границы графика явно (фиксированные)
         plt.Axes.SetLimits(xMin, xMax, yMin, yMax);
-
-        // Находим точки на границе между классами с использованием аналитической формулы
-        double xStep = 0.05; // Мелкий шаг для гладкой границы
-
-        // Границы между классами (1-2, 1-3, 2-3)
-        var boundaryPoints12 = BoundaryPointsGenerator.GenerateBoundaryPointsAnalytical(0, 1, classMeans, classCovariances, classPriors, xMin, xMax, xStep);
-        var boundaryPoints13 = BoundaryPointsGenerator.GenerateBoundaryPointsAnalytical(0, 2, classMeans, classCovariances, classPriors, xMin, xMax, xStep);
-        var boundaryPoints23 = BoundaryPointsGenerator.GenerateBoundaryPointsAnalytical(1, 2, classMeans, classCovariances, classPriors, xMin, xMax, xStep);
-
-        // Сортируем точки для более гладкого отображения
-        boundaryPoints12 = boundaryPoints12.OrderBy(p => p.Item1).ThenBy(p => p.Item2).ToList();
-        boundaryPoints13 = boundaryPoints13.OrderBy(p => p.Item1).ThenBy(p => p.Item2).ToList();
-        boundaryPoints23 = boundaryPoints23.OrderBy(p => p.Item1).ThenBy(p => p.Item2).ToList();
-
-        // Преобразуем списки точек в массивы для отображения на графике
-        double[] boundary12X = boundaryPoints12.Select(p => p.Item1).ToArray();
-        double[] boundary12Y = boundaryPoints12.Select(p => p.Item2).ToArray();
-        double[] boundary13X = boundaryPoints13.Select(p => p.Item1).ToArray();
-        double[] boundary13Y = boundaryPoints13.Select(p => p.Item2).ToArray();
-        double[] boundary23X = boundaryPoints23.Select(p => p.Item1).ToArray();
-        double[] boundary23Y = boundaryPoints23.Select(p => p.Item2).ToArray();
-        
-        // Рисуем границы между классами
-        if (boundaryPoints12.Count > 0)
-        {
-            var boundary12 = plt.Add.Scatter(boundary12X, boundary12Y, plotColors[0]);
-            boundary12.LineWidth = 2;
-            boundary12.MarkerSize = 0;
-        }
-
-        if (boundaryPoints13.Count > 0)
-        {
-            var boundary13 = plt.Add.Scatter(boundary13X, boundary13Y, plotColors[1]);
-            boundary13.LineWidth = 2;
-            boundary13.MarkerSize = 0;
-        }
-
-        if (boundaryPoints23.Count > 0)
-        {
-            var boundary23 = plt.Add.Scatter(boundary23X, boundary23Y, plotColors[2]);
-            boundary23.LineWidth = 2;
-            boundary23.MarkerSize = 0;
-        }
 
         PlotHelper.SaveResultPlot(plt, "Result", "Result");
     }
