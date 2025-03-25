@@ -10,19 +10,40 @@ internal class Program
 
         // Определяем три набора параметров
 
+        var xM1 = 6.1;
+        var yM1 = 4.5;
+        var B1varX = 3.1;
+        var B1varY = 3.4;
+        var B1covXY = 2.8;
+        var B1covYX = 2.8;
+        
+        var xM2 = -4.2;
+        var yM2 = 4.2;
+        var B2varX = 2.2;
+        var B2varY = 2.6;
+        var B2covXY = -1.1;
+        var B2covYX = -1.1;
+        
+        var xM3 = 2.5;
+        var yM3 = -4;
+        var B3varX = 2.6;
+        var B3varY = 3.1;
+        var B3covXY = 2.1;
+        var B3covYX = 2.1;
+        
         var distributions = new (Vector<double> M, Matrix<double> B)[]
         {
             (
-                Vector<double>.Build.DenseOfArray(new[] { 5.1, 3.7 }),
-                Matrix<double>.Build.DenseOfArray(new[,] { { 4.1, 2.8 }, { 2.8, 4.4 } })
+                Vector<double>.Build.DenseOfArray(new[] { xM1, yM1 }),
+                Matrix<double>.Build.DenseOfArray(new[,] { {B1varX , B1covXY }, { B1covYX, B1varY } })
             ),
             (
-                Vector<double>.Build.DenseOfArray(new[] { -4.2, 2.6 }),
-                Matrix<double>.Build.DenseOfArray(new[,] { { 2.2, -0.6 }, { -1.1, 3.6 } })
+                Vector<double>.Build.DenseOfArray(new[] { xM2 , yM2 }),
+                Matrix<double>.Build.DenseOfArray(new[,] { { B2varX , B2covXY }, { B2covYX, B2varY } })
             ),
             (
-                Vector<double>.Build.DenseOfArray(new[] { 3.5, -3.5 }),
-                Matrix<double>.Build.DenseOfArray(new[,] { { 2.6, 2.1 }, { 0.9, 4.1 } })
+                Vector<double>.Build.DenseOfArray(new[] { xM3, yM3 }),
+                Matrix<double>.Build.DenseOfArray(new[,] { { B3varX, B3covXY }, { B3covYX, B3varY} })
             )
         };
         
@@ -45,11 +66,14 @@ internal class Program
                 // Проверяем, является ли матрица B положительно определённой
                 ValidateMatrix(B);
 
+                // Матрица линейного преобразования
                 var A = CalculateA(B);
 
+                // Стандартный нормальный вектор, исходный шум
                 var Y = CalculateY(N, random);
 
                 // Генерация выборки X = A * Y + M
+                // Результирующий нормально распределенный вектор
                 var X = CalculateX(A, Y, N, M);
 
                 var xValues = X.Row(0).ToArray();
