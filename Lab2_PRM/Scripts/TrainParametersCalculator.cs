@@ -12,33 +12,33 @@ public static class TrainParametersCalculator
     /// априорные вероятности каждого класса
     
     public static (double[][] ClassMeans, double[][,] ClassCovariances, double[] ClassPriors)
-        Train(double[] trainDataX, double[] trainDataY, int[] labels, int numClasses)
+        Train(double[] trainDataX, double[] trainDataY, int[] trainLabels, int numberOfClasses)
     {
         var totalSamples = trainDataX.Length;
 
         // Количество точек в каждом классе
-        var classSampleCounts = GetClassSampleCounts(labels, numClasses, totalSamples);
+        var classSampleCounts = GetClassSampleCounts(trainLabels, numberOfClasses, totalSamples);
         
         // Оценки математических ожиданий
-        var classMeans = GetClassMeans(labels, numClasses, totalSamples, classSampleCounts, trainDataX, trainDataY);
+        var classMeans = GetClassMeans(trainLabels, numberOfClasses, totalSamples, classSampleCounts, trainDataX, trainDataY);
 
         // Оценки ковариационных матриц
-        var classCovariances = GetClassCovariances(labels, numClasses, totalSamples, classSampleCounts, trainDataX,
+        var classCovariances = GetClassCovariances(trainLabels, numberOfClasses, totalSamples, classSampleCounts, trainDataX,
             trainDataY, classMeans);
         
         // Априорные вероятности
-        var classPriors = GetClassPriors(numClasses, classSampleCounts, totalSamples);
+        var classPriors = GetClassPriors(numberOfClasses, classSampleCounts, totalSamples);
 
         return (classMeans, classCovariances, classPriors);
     }
 
-    private static int[] GetClassSampleCounts(int[] labels, int numClasses, int totalSamples)
+    private static int[] GetClassSampleCounts(int[] trainLabels, int numberOfClasses, int totalSamples)
     {
-        var classSampleCounts = new int[numClasses];
+        var classSampleCounts = new int[numberOfClasses];
 
         for (var i = 0; i < totalSamples; i++)
         {
-            var classLabel = labels[i];
+            var classLabel = trainLabels[i];
 
             classSampleCounts[classLabel]++;
         }
@@ -69,11 +69,13 @@ public static class TrainParametersCalculator
 
         // Деление на количество точек в каждом классе
         for (var c = 0; c < numClasses; c++)
+        {
             if (classSampleCounts[c] > 0)
             {
                 classMeans[c][0] /= classSampleCounts[c]; // x
                 classMeans[c][1] /= classSampleCounts[c]; // y
             }
+        }
 
         return classMeans;
     }
@@ -123,7 +125,10 @@ public static class TrainParametersCalculator
     {
         var classPriors = new double[numClasses];
 
-        for (var c = 0; c < numClasses; c++) classPriors[c] = (double)classSampleCounts[c] / totalSamples;
+        for (var c = 0; c < numClasses; c++)
+        {
+            classPriors[c] = (double)classSampleCounts[c] / totalSamples;
+        }
 
         return classPriors;
     }
