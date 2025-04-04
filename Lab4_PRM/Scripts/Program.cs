@@ -47,10 +47,13 @@ internal class Program
         trainInputs = trainInputs.ZScores(means, stdDevs);  // Масштабируем обучающую выборку
         testInputs = testInputs.ZScores(means, stdDevs);    // Масштабируем тестовую выборку теми же параметрами
 
+        var variance = trainInputs.Variance(); // дисперсия признаков
+        double gamma = 1.0 / (trainInputs.GetLength(1) * variance.Mean()); 
+        
         // Настройка обучающего алгоритма SVM с гауссовским (RBF) ядром
         var teacher = new SequentialMinimalOptimization<Gaussian>
         {
-            Kernel = new Gaussian(1.0),    // Параметр ширины ядра (σ)
+            Kernel = new Gaussian(gamma),    // Параметр ширины ядра (σ)
             Complexity = 1.0               // Параметр регуляризации (C)
         };
 
