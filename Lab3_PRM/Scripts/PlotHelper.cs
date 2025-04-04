@@ -15,12 +15,13 @@ internal static class PlotHelper
 
         for (var i = 0; i < classifiers.Count; i++)
         {
+            var individualPlot = new Plot();
             var clf = classifiers[i];
             var w = clf.Weights;
             var b = clf.Threshold;
 
-            var y0 = (b - w[0] * xMin) / w[1];
-            var y1 = (b - w[0] * xMax) / w[1];
+            var y0 = (-b - w[0] * xMin) / w[1];
+            var y1 = (-b - w[0] * xMax) / w[1];
 
             var line = plt.Add.Line(xMin, y0, xMax, y1);
             line.Color = Pallete.lineColors[i % Pallete.classColors.Length];
